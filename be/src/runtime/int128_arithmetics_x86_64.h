@@ -64,15 +64,15 @@ static inline int asm_add(T x, U y, T& res) {
                 "setc %b[overflow]\n\t"
                 "sets %%r8b\n\t"
                 "or %%r8b, %b[overflow]"
-                : [ res ] "+r"(res), [ overflow ] "+r"(overflow)
-                : [ x ] "r"(x), [ y ] "r"(y)
+                : [res] "+r"(res), [overflow] "+r"(overflow)
+                : [x] "r"(x), [y] "r"(y)
                 : "cc", "r8");
     } else {
         __asm__ __volatile__(
                 "mov %[x], %[res]\n\t"
                 "add %[y], %[res]"
-                : [ res ] "+r"(res), "=@cco"(overflow)
-                : [ x ] "r"(x), [ y ] "r"(y)
+                : [res] "+r"(res), "=@cco"(overflow)
+                : [x] "r"(x), [y] "r"(y)
                 : "cc");
     }
     return overflow;
@@ -87,8 +87,8 @@ static int asm_mul(T x, U y, Int128Wrapper& res) {
                 "mul %[y]\n\t"
                 "mov %%rdx, %[high]\n\t"
                 "mov %%rax, %[low]"
-                : [ high ] "=r"(res.u.high), [ low ] "=r"(res.u.low), "=@cco"(overflow)
-                : [ x ] "r"(x), [ y ] "r"(y)
+                : [high] "=r"(res.u.high), [low] "=r"(res.u.low), "=@cco"(overflow)
+                : [x] "r"(x), [y] "r"(y)
                 : "cc", "rdx", "rax");
     } else {
         __asm__ __volatile__(
@@ -96,8 +96,8 @@ static int asm_mul(T x, U y, Int128Wrapper& res) {
                 "imul %[y]\n\t"
                 "mov %%rdx, %[high]\n\t"
                 "mov %%rax, %[low]"
-                : [ high ] "=r"(res.s.high), [ low ] "=r"(res.s.low), "=@cco"(overflow)
-                : [ x ] "r"(x), [ y ] "r"(y)
+                : [high] "=r"(res.s.high), [low] "=r"(res.s.low), "=@cco"(overflow)
+                : [x] "r"(x), [y] "r"(y)
                 : "cc", "rdx", "rax");
     }
     return overflow;
@@ -121,8 +121,8 @@ static int64_t asm_mul32(int32_t x, int32_t y) {
             "imul %[y]\n\t"
             "mov %%edx, %[high]\n\t"
             "mov %%eax, %[low]"
-            : [ high ] "=r"(z.s.high), [ low ] "=r"(z.s.low)
-            : [ x ] "r"(x), [ y ] "r"(y)
+            : [high] "=r"(z.s.high), [low] "=r"(z.s.low)
+            : [x] "r"(x), [y] "r"(y)
             : "cc", "rax", "rdx");
     return z.i64;
 }
@@ -137,8 +137,8 @@ static inline bool asm_add_overflow(int128_t x, int128_t y, int128_t* z) {
             "mov %[xh], %[zh]\n\t"
             "add %[yl], %[zl]\n\t"
             "adc %[yh], %[zh]\n\t"
-            : [ zl ] "+r"(zw.s.low), [ zh ] "+r"(zw.s.high), "=@cco"(overflow)
-            : [ xl ] "r"(xw.s.low), [ yl ] "r"(yw.s.low), [ xh ] "r"(xw.s.high), [ yh ] "r"(yw.s.high)
+            : [zl] "+r"(zw.s.low), [zh] "+r"(zw.s.high), "=@cco"(overflow)
+            : [xl] "r"(xw.s.low), [yl] "r"(yw.s.low), [xh] "r"(xw.s.high), [yh] "r"(yw.s.high)
             : "cc");
     return overflow;
 }
@@ -153,8 +153,8 @@ static inline bool asm_sub_overflow(int128_t x, int128_t y, int128_t* z) {
             "mov %[xh], %[zh]\n\t"
             "sub %[yl], %[zl]\n\t"
             "sbb %[yh], %[zh]\n\t"
-            : [ zl ] "+r"(zw.s.low), [ zh ] "+r"(zw.s.high), "=@cco"(overflow)
-            : [ xl ] "r"(xw.s.low), [ yl ] "r"(yw.s.low), [ xh ] "r"(xw.s.high), [ yh ] "r"(yw.s.high)
+            : [zl] "+r"(zw.s.low), [zh] "+r"(zw.s.high), "=@cco"(overflow)
+            : [xl] "r"(xw.s.low), [yl] "r"(yw.s.low), [xh] "r"(xw.s.high), [yh] "r"(yw.s.high)
             : "cc");
     return overflow;
 }
@@ -211,7 +211,7 @@ static inline int multi3(const int128_t& x, const int128_t& y, int128_t& res) {
 // udiv128by64to64 and udivmodti4 come from llvm-project/compiler-rt/lib/builtins/udivmodti4.c
 static inline uint64_t udiv128by64to64(uint64_t u1, uint64_t u0, uint64_t v, uint64_t* r) {
     uint64_t result;
-    __asm__("divq %[v]" : "=a"(result), "=d"(*r) : [ v ] "r"(v), "a"(u0), "d"(u1));
+    __asm__("divq %[v]" : "=a"(result), "=d"(*r) : [v] "r"(v), "a"(u0), "d"(u1));
     return result;
 }
 
