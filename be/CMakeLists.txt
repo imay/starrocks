@@ -136,9 +136,15 @@ set(BOOST_ROOT ${THIRDPARTY_DIR})
 set(Boost_NO_WARN_NEW_VERSIONS ON)
 
 if (NOT APPLE)
+<<<<<<< Updated upstream
     find_package(Boost 1.75.0 REQUIRED COMPONENTS thread regex filesystem system date_time program_options)
 else()
     find_package(Boost 1.75.0 COMPONENTS thread regex filesystem system date_time program_options)
+=======
+    find_package(Boost 1.75.0 REQUIRED COMPONENTS thread date_time program_options)
+else()
+    find_package(Boost 1.75.0 COMPONENTS thread date_time program_options)
+>>>>>>> Stashed changes
 endif()
 include_directories(${Boost_INCLUDE_DIRS})
 message(STATUS ${Boost_LIBRARIES})
